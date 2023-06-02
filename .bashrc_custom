@@ -1,0 +1,32 @@
+# Define colors
+Cyan='\e[1;36m'
+Green='\e[1;32m'
+Blue='\e[1;34m'
+Yellow='\e[1;33m'
+Reset='\e[0m'
+
+# Custom Bash prompt configuration
+parse_git_branch() {
+  local branch_name=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+  if [ -n "$branch_name" ]; then
+    echo -e " ${Reset}(${Cyan}$branch_name${Reset})"
+  fi
+}
+
+# Function to display date and time
+display_datetime() {
+	local datetime=$(date +'%F %T')
+	local path_length=${#PWD}
+	local hostname_length=${#HOSTNAME}
+	local datetime_length=$(echo -n "$datetime" | wc -L)
+	local max_length=$((COLUMNS - path_length - datetime_length - hostname_length - 0))
+	local fill=""
+#	if [ "$max_length" -gt "0" ]; then
+#		fill=$(printf "%.s-${max_length}s" "-")
+#	fi
+#	echo -en "${fill}${datetime}"
+	echo -e " ${datetime}"
+}
+
+PS1="${Green}\u@\h${Reset}:${Blue}\w${Cyan}\$(display_datetime)\n${Yellow}\$(parse_git_branch)${Reset}\$ "
+
