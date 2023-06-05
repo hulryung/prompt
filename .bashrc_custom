@@ -16,15 +16,6 @@ parse_git_branch() {
 # Function to display date and time
 display_datetime() {
 	local datetime=$(date +'%F %T')
-	local path_length=${#PWD}
-	local hostname_length=${#HOSTNAME}
-	local datetime_length=$(echo -n "$datetime" | wc -L)
-	local max_length=$((COLUMNS - path_length - datetime_length - hostname_length - 0))
-	local fill=""
-#	if [ "$max_length" -gt "0" ]; then
-#		fill=$(printf "%.s-${max_length}s" "-")
-#	fi
-#	echo -en "${fill}${datetime}"
 	echo -e " ${datetime}"
 }
 
