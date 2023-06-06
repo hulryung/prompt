@@ -19,5 +19,5 @@ display_datetime() {
 	echo -e " ${datetime}"
 }
 
-PS1="${Green}\u${Reset}@${Green}\h${Reset}:${Yellow}\$(parse_git_branch)${Reset}${Cyan}\$(display_datetime)\n${Blue}\w\$ "
+PS1="${Green}\u${Reset}@${Green}\h${Reset}:${Yellow}\$(parse_git_branch)${Reset}${Cyan}\$(display_datetime)\n${Blue}\w${Reset}\$ "
 
