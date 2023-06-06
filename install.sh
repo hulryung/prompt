@@ -2,7 +2,7 @@
 
 BASHRC_FILE=~/.bashrc
 BASHRC_SKEL_FILE=/etc/skel/.bashrc
-CUSTOM_BASHRC_FILE=.bashrc_custom
+CUSTOM_PROMPT_FILE=prompt
 
 # Get confirmation that bashrc is resetting, if not exit
 read -p "Do you want to reset your .bashrc file? (y/n) " -n 1 -r
@@ -28,7 +28,7 @@ else
 fi
 
 # Append custom .bashrc content to existing .bashrc
-cat "$CUSTOM_BASHRC_FILE" >> "$BASHRC_FILE"
+cat "$CUSTOM_PROMPT_FILE" >> "$BASHRC_FILE"
 
 echo "Custom Bash prompt installed successfully!"
 echo "Please reload your Bash configuration by running: source ~/.bashrc or open a new terminal"
