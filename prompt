@@ -1,23 +1,38 @@
 # Define colors
-Cyan='\e[1;36m'
-Green='\e[1;32m'
-Blue='\e[1;34m'
-Yellow='\e[1;33m'
-Reset='\e[0m'
+# Cyan='\[\e[1;36m\]'
+# Green='\[\e[1;32m\]'
+# Blue='\[\e[1;34m\]'
+# Yellow='\[\e[1;33m\]'
+# Reset='\[\e[0m\]'
+
+# Define colors using tput
+# add \[ and \] around the tput command to tell bash that these commands 
+# don't take up any space on the command line 
+Cyan="\[$(tput setaf 6)\]"
+Green="\[$(tput setaf 2)\]"
+Blue="\[$(tput setaf 4)\]"
+Yellow="\[$(tput setaf 3)\]"
+Reset="\[$(tput sgr0)\]"
+# Bold="\[$(tput bold)\]"
+# Underline="\[$(tput smul)\]"
+# Inverse="\[$(tput rev)\]"
+# Blink="\[$(tput blink)\]"
+# Normal="\[$(tput sgr0)\]"
+# export PS1="${Bold}${Cyan}\u${Reset}@${Green}\h${Reset}:${Yellow}\$(parse_git_branch)${Reset}${Cyan}\$(display_datetime)\n${Blue}\w${Reset}\$ "
 
 # Custom Bash prompt configuration
 parse_git_branch() {
   local branch_name=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
   if [ -n "$branch_name" ]; then
-    echo -e " ${Reset}(${Cyan}$branch_name${Reset})"
+    echo "($branch_name)"
   fi
 }
 
 # Function to display date and time
 display_datetime() {
 	local datetime=$(date +'%F %T')
-	echo -e " ${datetime}"
+	echo "${datetime}"
 }
 
-PS1="${Green}\u${Reset}@${Green}\h${Reset}:${Yellow}\$(parse_git_branch)${Reset}${Cyan}\$(display_datetime)\n${Blue}\w${Reset}\$ "
+PS1="${Green}\u${Reset}@${Green}\h${Reset}:${Yellow} \$(parse_git_branch)${Reset}${Cyan} \$(display_datetime)\n${Blue}\w${Reset}\$ "
 
