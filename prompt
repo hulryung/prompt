@@ -34,5 +34,12 @@ display_datetime() {
 	echo "${datetime}"
 }
 
+# export PS1="${Cyan}\u${Reset}@${Green}\h${Reset}:${Yellow} \$(parse_git_branch)${Reset}${Cyan} \$(display_datetime)\n${Blue}\w${Reset}\$ "
+# explain the PS1
+# \u - username
+# \h - hostname
+# \w - current working directory
+# \$(parse_git_branch) - git branch
+# \$(display_datetime) - date and time
 PS1="${Green}\u${Reset}@${Green}\h${Reset}:${Yellow} \$(parse_git_branch)${Reset}${Cyan} \$(display_datetime)\n${Blue}\w${Reset}\$ "
 
