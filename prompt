@@ -9,15 +9,18 @@
 # add \[ and \] around the tput command to tell bash that these commands 
 # don't take up any space on the command line 
 Cyan="\[$(tput setaf 6)\]"
+White="\[$(tput setaf 7)\]"
 Green="\[$(tput setaf 2)\]"
 Blue="\[$(tput setaf 4)\]"
 Yellow="\[$(tput setaf 3)\]"
+Red="\[$(tput setaf 1)\]"
+
 Reset="\[$(tput sgr0)\]"
-# Bold="\[$(tput bold)\]"
-# Underline="\[$(tput smul)\]"
-# Inverse="\[$(tput rev)\]"
-# Blink="\[$(tput blink)\]"
-# Normal="\[$(tput sgr0)\]"
+Bold="\[$(tput bold)\]"
+Underline="\[$(tput smul)\]"
+Inverse="\[$(tput rev)\]"
+Blink="\[$(tput blink)\]"
+Normal="\[$(tput sgr0)\]"
 # export PS1="${Bold}${Cyan}\u${Reset}@${Green}\h${Reset}:${Yellow}\$(parse_git_branch)${Reset}${Cyan}\$(display_datetime)\n${Blue}\w${Reset}\$ "
 
 # Custom Bash prompt configuration
@@ -34,12 +37,58 @@ display_datetime() {
 	echo "${datetime}"
 }
 
+# shrink full path with ... when it's too long
+display_pwd() {
+  # get the current prompt without current path
+  local PS_PREVIEW=" $(parse_git_branch) $(display_datetime)"
+  # get PS preview length
+  local ps_length=${#PS_PREVIEW}
+
+  # pwd is the current working directory with start from home directory
+  local pwd=$(pwd | sed -e "s|$HOME|~|")
+  # get the length of the current working directory
+  local pwd_length=${#pwd}
+
+  # max lenght of the terminal window
+  # tput cols will return the number of columns in the terminal
+  # It minus 4 to leave space for the '...'
+  local max_length=$(($(tput cols) - ps_length - 4))
+  if [ $pwd_length -gt $max_length ]; then
+    local pwd_tail=$(echo $pwd | sed -e "s/.*\(.\{$max_length\}\)/\1/")
+    echo "...$pwd_tail"
+  else
+    echo $pwd
+  fi
+}
+
+# function fill blank to the right from current cursor position to the end of the terminal
+fill_blank() {
+  local PS_PREVIEW="$(display_pwd) $(parse_git_branch) $(display_datetime)"
+  local cols=$(tput cols)
+  local ps_length=${#PS_PREVIEW}
+  local blank_length=$((cols - ps_length))
+  for ((i=0; i<blank_length; i++)); do
+    echo -n "-"
+  done
+}
+
 # export PS1="${Cyan}\u${Reset}@${Green}\h${Reset}:${Yellow} \$(parse_git_branch)${Reset}${Cyan} \$(display_datetime)\n${Blue}\w${Reset}\$ "
 # explain the PS1
 # \u - username
 # \h - hostname
 # \w - current working directory
+# \$(display_path) - shrink the path to fit the terminal
 # \$(parse_git_branch) - git branch
 # \$(display_datetime) - date and time
-PS1="${Green}\u${Reset}@${Green}\h${Reset}:${Yellow} \$(parse_git_branch)${Reset}${Cyan} \$(display_datetime)\n${Blue}\w${Reset}\$ "
+# \$(fill_blank) - fill the blank space to the end of the terminal
+# \n - new line
 
+PS_GIT="\$(parse_git_branch)"
+PS_DATE="\$(display_datetime)"
+PS_PWD="\$(display_pwd)"
+PS_FILL="\$(fill_blank)"
+PS_USER_HOST="${Cyan}\u${Reset}@${Cyan}\h${Reset}"
+PS1="${Blue}${PS_PWD} "
+PS1=$PS1"${Yellow}${PS_GIT}${Reset}"
+PS1=$PS1"${Blue}${PS_FILL}${Cyan}${PS_DATE}\n"
+PS1=$PS1"${PS_USER_HOST}${Reset}$ "
