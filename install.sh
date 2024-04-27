@@ -1,11 +1,13 @@
 #!/bin/bash
 
 BASHRC_FILE=~/.bashrc
-BASHRC_SKEL_FILE=/etc/skel/.bashrc
-CUSTOM_PROMPT_FILE=prompt
+PROMPT_FILE=prompt
+TARGET_PROMPT_FILE=~/.$PROMPT_FILE
 
 # Get confirmation that bashrc is resetting, if not exit
-read -p "Do you want to reset your .bashrc file? (y/n) " -n 1 -r
+echo "This script will install a custom Bash prompt to your .bashrc file."
+read -p "Do you want to continue? [Y/n] " -r
+
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo "Aborted!"
@@ -14,21 +16,20 @@ fi
 
 # Backup existing .bashrc file
 if [ -f "$BASHRC_FILE" ]; then
-    mv "$BASHRC_FILE" "$BASHRC_FILE.bak"
+    cp "$BASHRC_FILE" "$BASHRC_FILE.bak"
     echo "Existing .bashrc file backed up as .bashrc.bak"
 fi
 
-# if exist bashrc_skel file, copy it to .bashrc
-if [ -f "$BASHRC_SKEL_FILE" ]; then
-    cp "$BASHRC_SKEL_FILE" "$BASHRC_FILE"
-    echo "Copied .bashrc_skel to .bashrc"
-else
-    echo "No .bashrc_skel file found, creating new .bashrc file"
-    touch "$BASHRC_FILE"
+# Append below snippet to .bashrc if not already present
+if ! grep -q "$TARGET_PROMPT_FILE" "$BASHRC_FILE"; then
+    echo "# Load custom Bash prompt" >> "$BASHRC_FILE"
+    echo "if [ -f $TARGET_PROMPT_FILE ]; then" >> "$BASHRC_FILE"
+    echo "    . $TARGET_PROMPT_FILE" >> "$BASHRC_FILE"
+    echo "fi" >> "$BASHRC_FILE"
 fi
 
-# Append custom .bashrc content to existing .bashrc
-cat "$CUSTOM_PROMPT_FILE" >> "$BASHRC_FILE"
+# Create custom Bash prompt file
+cp $PROMPT_FILE $TARGET_PROMPT_FILE
 
 echo "Custom Bash prompt installed successfully!"
 echo "Please reload your Bash configuration by running: source ~/.bashrc or open a new terminal"
