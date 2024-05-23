@@ -1,8 +1,9 @@
 #!/bin/bash
 
 BASHRC_FILE=~/.bashrc
-PROMPT_FILE=prompt
-TARGET_PROMPT_FILE=~/.$PROMPT_FILE
+BASHRC_SKEL_FILE=/etc/skel/.bashrc
+CUSTOM_PROMPT_FILE=prompt
+CUSTOM_SCREEN_FILE=screenrc
 
 # Get confirmation that bashrc is resetting, if not exit
 echo "This script will install a custom Bash prompt to your .bashrc file."
@@ -30,6 +31,9 @@ fi
 
 # Create custom Bash prompt file
 cp $PROMPT_FILE $TARGET_PROMPT_FILE
+
+# Append custom .screenrc content to existing .screenrc
+cat "$CUSTOM_SCREEN_FILE" > ~/.screenrc
 
 echo "Custom Bash prompt installed successfully!"
 echo "Please reload your Bash configuration by running: source ~/.bashrc or open a new terminal"

@@ -1,0 +1,2 @@
+# set terminal cap info
+termcapinfo xterm* ti@:te@
