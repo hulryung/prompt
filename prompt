@@ -59,6 +59,14 @@ fill_blank() {
   done
 }
 
+if [[ -n $STY && $STY =~ ^[0-9]+\..* ]]; then
+  session_pid=" ${Yellow}${STY%%.*}${Reset}"
+else
+  session_pid=""
+fi
+
+# If this session is on screen, add a screen session indicator
+
 # export PS1="${Cyan}\u${Reset}@${Green}\h${Reset}:${Yellow} \$(parse_git_branch)${Reset}${Cyan} \$(display_datetime)\n${Blue}\w${Reset}\$ "
 # explain the PS1
 # \u - username
@@ -74,7 +82,7 @@ PS_GIT="\$(parse_git_branch)"
 PS_DATE="\$(display_datetime)"
 PS_PWD="\$(display_pwd)"
 PS_FILL="\$(fill_blank)"
-PS_USER_HOST="${Cyan}\u${Reset}@${Cyan}\h${Reset}"
+PS_USER_HOST="${Cyan}\u${Reset}@${Cyan}\h${session_pid}${Reset}"
 PS1="${Blue}${PS_PWD} "
 PS1=$PS1"${Yellow}${PS_GIT}${Reset}"
 PS1=$PS1"${Blue}${PS_FILL}${Cyan}${PS_DATE}\n"
